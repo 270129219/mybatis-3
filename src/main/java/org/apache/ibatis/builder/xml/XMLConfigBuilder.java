@@ -96,6 +96,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
+    //1、XPathParser实例的parse()方法通过xpath的方法对XML进行解析,首先定位configuration标签作为根标签；
+    //2、与Spring解析XML不同的是Spring仅仅通过SAX方法将XML文件解析成Document对象，然后对根节点下的标签进行
+    // 遍历解析生成对应的BeanDefinitiion，而MyBatis在解析玩完Document后利用XPath对标签进行定位获取；
     parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
   }

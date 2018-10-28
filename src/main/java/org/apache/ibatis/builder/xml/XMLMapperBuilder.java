@@ -115,6 +115,13 @@ public class XMLMapperBuilder extends BaseBuilder {
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       resultMapElements(context.evalNodes("/mapper/resultMap"));
       sqlElement(context.evalNodes("/mapper/sql"));
+
+      //1、通过XPath从mapper映射文件中获取全部SQL操作集合，每条操作创建一个XMLStatementBuilder对象进行解析
+      //2、在XMLStatementBuilder对象的parseStatementNode()方法中构建SqlSource对象和MappedStatement对象
+      //3、在创建MapperStatement对象前需要先创建SqlSource，BoundSql作为从mapper中解析出的sql语句的载体；
+      //   BoundSql对象中的sql已经解析为带有占位符?的可执行的sql；parameterMappings是执行时传入的参数，因此每
+      //   执行一次都会创建一个BoundSql对象；
+      //4、在生成SqlSource对象过程中会用到XMLScriptBuilder对动态sql进行解析，转换成可执行的sql；
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);
